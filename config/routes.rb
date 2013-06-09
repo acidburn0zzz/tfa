@@ -1,8 +1,13 @@
 Tfa::Application.routes.draw do
-  authenticated :user do
-    root :to => 'home#index'
-  end
-  root :to => "home#index"
-  devise_for :users
-  resources :users
+	devise_for :users
+	authenticated :user do
+		root :to => 'home#index'
+		resources :users do
+			member do
+				get "reset_secret" => "users#reset_secret"
+			end
+		end
+	end
+	root :to => "home#index"
+	resources :users
 end

@@ -2,9 +2,9 @@ source 'https://rubygems.org'
 gem 'rails', '3.2.13'
 gem 'sqlite3'
 group :assets do
-  gem 'sass-rails',   '~> 3.2.3'
-  gem 'coffee-rails', '~> 3.2.1'
-  gem 'uglifier', '>= 1.0.3'
+	gem 'sass-rails',   '~> 3.2.3'
+	gem 'coffee-rails', '~> 3.2.1'
+	gem 'uglifier', '>= 1.0.3'
 end
 gem 'jquery-rails'
 gem "thin", ">= 1.5.0"
@@ -26,3 +26,8 @@ gem "binding_of_caller", ">= 0.7.1", :group => :development, :platforms => [:mri
 gem "libv8", ">= 3.11.8"
 gem "therubyracer", ">= 0.11.3", :group => :assets, :platform => :ruby, :require => "v8"
 gem "hub", ">= 1.10.2", :require => nil, :group => [:development]
+
+gem "rotp"
+gem "qrencoder"
+gem "two_factor_authentication", :git => 'git://github.com/dougsko/two_factor_authentication.git'
+

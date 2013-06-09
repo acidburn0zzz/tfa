@@ -1,3 +1,11 @@
-<h3>User</h3>
-<p>User: <%= @user.name %></p>
+<h2>User Details</h3>
+<p>Name: <%= @user.name if @user.name %></p>
 <p>Email: <%= @user.email if @user.email %></p>
+
+<h3>Use Google Authenticator to scan this QR code:</h3>
+<div id="qrcode">
+	<img src='/images/qrcode.png'>
+</div>
+<h3>Or enter this code manually:</h3>
+<p><%= @user.otp_secret %></p>
+<p><%= link_to 'Reset OTP secret', reset_secret_user_path %></p>
