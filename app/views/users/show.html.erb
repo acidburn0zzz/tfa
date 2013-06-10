@@ -1,12 +1,16 @@
-<h2>User Details</h3>
-<p>Name: <%= @user.name if @user.name %></p>
-<p>Email: <%= @user.email if @user.email %></p>
-<p>Roles: <%= @user.roles.collect{|r| r.name }.join(", ") %></p>
+<div class="row">
+	<h1>User Details</h1>
+	<p>Name: <%= @user.name if @user.name %></p>
+	<p>Email: <%= @user.email if @user.email %></p>
+	<p>Role: <%= @user.roles.collect{|r| r.name }.join(", ") %></p>
 
-<h3>Use Google Authenticator to scan this QR code:</h3>
-<div id="qrcode">
+	<h3>Use Google Authenticator to scan this QR code:</h3>
+	<div id="qrcode">
 	<img src='/images/qrcode.png'>
+	<h3>Or enter this code manually:</h3>
+	<pre><%= @user.otp_secret %></pre>
+	<br/>
+	<div id="reset_button">
+		<%= link_to 'Reset OTP secret', reset_secret_user_path, :class => "btn" %>
+	</div>
 </div>
-<h3>Or enter this code manually:</h3>
-<p><%= @user.otp_secret %></p>
-<p><%= link_to 'Reset OTP secret', reset_secret_user_path %></p>
