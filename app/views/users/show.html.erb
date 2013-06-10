@@ -1,6 +1,7 @@
 <h2>User Details</h3>
 <p>Name: <%= @user.name if @user.name %></p>
 <p>Email: <%= @user.email if @user.email %></p>
+<p>Roles: <%= @user.roles.collect{|r| r.name }.join(", ") %></p>
 
 <h3>Use Google Authenticator to scan this QR code:</h3>
 <div id="qrcode">

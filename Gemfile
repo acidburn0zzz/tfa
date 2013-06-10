@@ -31,3 +31,4 @@ gem "rotp"
 gem "qrencoder"
 gem "two_factor_authentication", :git => 'git://github.com/dougsko/two_factor_authentication.git'
 
+gem "twitter-bootstrap-rails"
