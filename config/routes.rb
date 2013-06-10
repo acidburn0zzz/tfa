@@ -8,6 +8,7 @@ Tfa::Application.routes.draw do
 			end
 		end
 	end
+	#root :to => 'users#index'
 	devise_scope :user do
 		root :to => "devise/sessions#new"
 	end

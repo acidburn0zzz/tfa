@@ -7,12 +7,6 @@ class UsersController < ApplicationController
 		@users = User.all
 	end
 
-=begin
-	def show
-		@user = User.find(params[:id])
-	end
-=end
-
 	def update
 		authorize! :update, @user, :message => 'Not authorized as an administrator.'
 		@user = User.find(params[:id])
@@ -34,7 +28,6 @@ class UsersController < ApplicationController
 		end
 	end
 
-
 	def show
 		@user = User.find(params[:id])
 		@totp = ROTP::TOTP.new(@user.otp_secret)
@@ -44,11 +37,9 @@ class UsersController < ApplicationController
 	end
 
 	def reset_secret
-		puts "DEBUG: IM IN RESET_SECRET"
 		@user = User.find(params[:id])
 		@user.otp_secret = ROTP::Base32.random_base32
 		@user.save
 		redirect_to user_path
 	end
-
 end

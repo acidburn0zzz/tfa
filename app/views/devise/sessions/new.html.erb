@@ -1,3 +1,11 @@
+<div class="hero-unit">
+	<h1>Authenticate Yourself!</h1>
+	<p>This application provides a user management system, secured with two-factor 
+	authentication, that provides access to restricted resources based on role.
+	</p>
+</div>
+<div class="row">
+	<div class="span4">
 <h2>Sign in</h2>
 <%= simple_form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => {:class => 'form-vertical' }) do |f| %>
   <%= f.input :email, :autofocus => true %>
@@ -6,3 +14,13 @@
   <%= f.button :submit, "Sign in", :class => 'btn-primary' %>
 <% end %>
 <%= render "devise/shared/links" %>
+</div>
+<div class="span8">
+	<p>The first authentication mechanism is a username and password.
+	This provides the system with something you know.
+	The second mechanism is a one time password, provided by Google 
+	Authenticator.  This token is something you posess.  Therefore,
+	you can access the system is you have both, something you know,
+	and something in your posession.
+	</p>
+</div>
