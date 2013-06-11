@@ -101,6 +101,12 @@ Given /^I exist as an unconfirmed user$/ do
 	create_unconfirmed_user
 end
 
+
+Given /^I am on the Edit account page$/ do
+	click_link "Edit account"
+end
+
+
 ### WHEN ###
 When /^I sign in with valid credentials$/ do
 	create_visitor
@@ -159,6 +165,11 @@ When /^I edit my account details$/ do
 	fill_in "Name", :with => "newname"
 	fill_in "user_current_password", :with => @visitor[:password]
 	click_button "Update"
+end
+
+When /^I click the Reset OTP secret button$/ do
+	click_button "Reset OTP secret"
+	page.driver.browser.switch_to.alert.accept
 end
 
 When /^I look at the list of users$/ do
@@ -254,4 +265,8 @@ end
 
 Then /^I should see an OTP error message$/ do
 	page.should have_content "Attempt failed"
+end
+
+Then /^I should see a QR code$/ do
+	page.should have_content "OTP Secret Reset"
 end
