@@ -169,7 +169,7 @@ end
 
 When /^I click the Reset OTP secret button$/ do
 	click_button "Reset OTP secret"
-	page.driver.browser.switch_to.alert.accept
+	#page.driver.browser.switch_to.alert.accept
 end
 
 When /^I look at the list of users$/ do

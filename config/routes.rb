@@ -5,6 +5,7 @@ Tfa::Application.routes.draw do
 		resources :users do
 			member do
 				get "reset_secret" => "users#reset_secret"
+				get "delete_qr_code" => "users#delete_qr_code"
 			end
 		end
 	end

@@ -33,7 +33,15 @@ class UsersController < ApplicationController
 		@totp = ROTP::TOTP.new(@user.otp_secret)
 		@qr_string = @totp.provisioning_uri("auth test - #{@user.email}")
 		@qr_code = QREncoder.encode(@qr_string)
-		@qr_code.png(pixels_per_module: 4, margin: 1).save("public/images/qrcode.png")
+		@qr_code.png(pixels_per_module: 4, margin: 1).save("public/images/qrcode-#{@user.id}.png")
+	end
+
+	def delete_qr_code
+		@user = User.find(params[:id])
+		if File.exists?("public/images/qrcode-#{@user.id}.png")
+			File.delete("public/images/qrcode-#{@user.id}.png")
+		end
+		redirect_to root_path
 	end
 
 	def reset_secret
