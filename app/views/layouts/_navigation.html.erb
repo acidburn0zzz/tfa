@@ -1,13 +1,15 @@
 <%= nav_bar :brand => "Authorization Application", :responsive => true, :brand_link => root_path do %>
 	<% menu_group :pull => :right do %>
 		<% if user_signed_in? %>
-			<%= menu_item "Log Out", destroy_user_session_path, :method => :delete %>
-		<% end %>
-		<% if user_signed_in? %>
 			<%= menu_item "Edit account", edit_user_registration_path %>
 			<% if current_user.has_role? :admin %>
-				<%= menu_item "Admin", users_path %>
+				<%= drop_down "Admin" do %>
+					<%= menu_item "Manage users", users_path %>
+				<% end %>
 			<% end %>
+		<% end %>
+		<% if user_signed_in? %>
+			<%= menu_item "Log Out", destroy_user_session_path, :method => :delete %>
 		<% end %>
 	<% end %>
 <% end %>

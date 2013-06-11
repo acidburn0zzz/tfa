@@ -11,6 +11,6 @@
 	<pre><%= @user.otp_secret %></pre>
 	<br/>
 	<div id="reset_button">
-		<%= link_to 'Reset OTP secret', reset_secret_user_path, :class => "btn" %>
+		<%= button_to "Reset OTP secret", reset_secret_user_path, :class => 'btn btn-warning', :data => {:confirm => "Are you sure?" }, :method => :get %>
 	</div>
 </div>

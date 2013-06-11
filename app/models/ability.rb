@@ -5,8 +5,8 @@ class Ability
 		user ||= User.new # guest user (not logged in)
 		if user.has_role? :admin
 			can :manage, :all
-		end
-		if user.has_role? :user
+		elsif user.has_role? :user
+			#can :read, :all
 			can [:read, :update, :reset_secret], User do |account|
 				account.email == user.email
 			end

@@ -3,7 +3,8 @@
 def create_visitor
 	@visitor ||= { :name => "Testy McUserton", :email => "example@example.com",
 		:password => "changeme", :password_confirmation => "changeme",
-		:otp_secret => "mdpuzsflwq6uctwn"}
+		:otp_secret => "lqdjuj4z6cvudk3v"
+	}
 end
 
 def find_user
@@ -20,7 +21,14 @@ end
 def create_user
 	create_visitor
 	delete_user
-	@user = FactoryGirl.create(:user, email: @visitor[:email])
+	@user = FactoryGirl.create(:user, email: @visitor[:email], :otp_secret => @visitor[:otp_secret])
+end
+
+def create_admin
+	create_visitor
+	delete_user
+	@user = FactoryGirl.create(:user, email: @visitor[:email], :otp_secret => @visitor[:otp_secret])
+	@user.add_role :admin
 end
 
 def delete_user
@@ -46,26 +54,42 @@ def sign_in
 	click_button "Sign in"
 end
 
+def sign_out
+	visit '/users/sign_out'
+end
+
 def two_factor
-	sign_in
 	totp = ROTP::TOTP.new(@visitor[:otp_secret])
 	fill_in "code", :with => totp.now
-	click_button "submit"
+	click_button "Submit"
 end
 
 ### GIVEN ###
 Given /^I am not logged in$/ do
-	visit '/users/sign_out'
+	sign_out
 end
 
-Given /^I am logged in$/ do
+Given /^I am logged in as a user$/ do
 	create_user
+	create_visitor
+	sign_out
+	sign_in
+	two_factor
+end
+
+Given /^I am logged in as an admin$/ do
+	create_admin
+	sign_out
 	sign_in
 	two_factor
 end
 
 Given /^I exist as a user$/ do
 	create_user
+end
+
+Given /^I exist as an admin$/ do
+	create_admin
 end
 
 Given /^I do not exist as a user$/ do
@@ -147,11 +171,16 @@ When /^I enter a valid OTP$/ do
 	click_button "Submit"
 end
 
+When /^I enter an invalid OTP$/ do
+	fill_in "code", :with => "this is incorrect"
+	click_button "Submit"
+end
+
 
 
 ### THEN ###
 Then /^I should be signed in$/ do
-	page.should have_content "Logout"
+	page.should have_content "Home"
 	page.should_not have_content "Sign up"
 	page.should_not have_content "Login"
 end
@@ -162,7 +191,8 @@ end
 
 Then /^I should be signed out$/ do
 	page.should have_content "Sign up"
-	page.should have_content "Login"
+	page.should have_content "Sign in"
+	page.should have_content "Forgot your password?"
 	page.should_not have_content "Logout"
 end
 
@@ -175,7 +205,7 @@ Then /^I see a successful sign in message$/ do
 end
 
 Then /^I should see a successful sign up message$/ do
-	page.should have_content "Welcome! You have signed up successfully."
+	page.should have_content "QR code"
 end
 
 Then /^I should see an invalid email message$/ do
@@ -191,7 +221,7 @@ Then /^I should see a missing password confirmation message$/ do
 end
 
 Then /^I should see a mismatched password message$/ do
-	page.should have_content "Passworddoesn't match confirmation"
+	page.should have_content "doesn't match confirmation"
 end
 
 Then /^I should see a signed out message$/ do
@@ -207,6 +237,21 @@ Then /^I should see an account edited message$/ do
 end
 
 Then /^I should see my name$/ do
-	create_user
 	page.should have_content @user[:name]
+end
+
+Then /^I should see the admin menu$/ do
+	page.should have_content "Admin"
+end
+
+Then /^I should have the user role$/ do
+	@user.has_role?(:user).should == true
+end
+
+Then /^I should have the admin role$/ do
+	@user.has_role?(:admin).should == true
+end
+
+Then /^I should see an OTP error message$/ do
+	page.should have_content "Attempt failed"
 end
