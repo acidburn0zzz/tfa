@@ -1,16 +1,14 @@
 <div class="row">
-	<h1>User Details</h1>
-	<p>Name: <%= @user.name if @user.name %></p>
-	<p>Email: <%= @user.email if @user.email %></p>
-	<p>Role: <%= @user.roles.collect{|r| r.name }.join(", ") %></p>
-
-	<h3>Use Google Authenticator to scan this QR code:</h3>
-	<div id="qrcode">
-	<img src='/images/qrcode.png'>
-	<h3>Or enter this code manually:</h3>
-	<pre><%= @user.otp_secret %></pre>
-	<br/>
-	<div id="reset_button">
-		<%= button_to "Reset OTP secret", reset_secret_user_path, :class => 'btn btn-warning', :data => {:confirm => "Are you sure?" }, :method => :get %>
-	</div>
+	<h1>OTP Secret Reset</h1>
+	<% if current_user.id == @user.id %>
+		<h3>Use Google Authenticator to scan this QR code:</h3>
+		<div id="qrcode">
+		<img src='/images/qrcode.png'>
+		<h3>Or enter this code manually:</h3>
+		<pre><%= @user.otp_secret %></pre>
+		<br/>
+	<% else %>
+		<h3>You are not authorized to view this user's OTP secret</h3>
+	<% end %>
+	<%= button_to "OK", root_path, :class => 'btn-primary', :method => :get %>
 </div>
