@@ -5,6 +5,7 @@
 <title><%= content_for?(:title) ? yield(:title) : "Tfa" %></title>
 <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "Tfa" %>">
 <%= stylesheet_link_tag :bootstrap %>
+<%= stylesheet_link_tag :bootstrap_and_overrides %>
 <%= javascript_include_tag :bootstrap %>
 <%= javascript_include_tag :application %>
 <%= javascript_include_tag :home %>
@@ -13,15 +14,21 @@
 </head>
 <body class="<%= controller_name %> <%= action_name %>">
 <div id="container" class="container">
-	<div class="row">
-		<%= render 'layouts/navigation' %>
-		<%= bootstrap_flash %>
+	<div class="row-fluid">
+		<div class="span12">
+			<%= render 'layouts/navigation' %>
+			<%= bootstrap_flash %>
+		</div>
 	</div>
 	<div id="main" role="main">
 		<%= yield %>
 	</div>
-	<footer>
-	</footer>
+	<div class="row-fluid">
+		<div class="span12">
+			<footer>
+			</footer>
+		</div>
+	</div>
 </div> <!--! end of #container -->
 </body>
 </html>

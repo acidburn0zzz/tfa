@@ -2,4 +2,4 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 $(document).ready ->
-	 $(".alert").fadeOut(5000);
+	$(".alert").fadeOut "slow"

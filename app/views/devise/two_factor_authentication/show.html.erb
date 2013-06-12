@@ -1,9 +1,22 @@
-<h2>Enter your personal code</h2>
-
-<p><%= flash[:notice] %></p>
-<%= form_tag([resource_name, :two_factor_authentication], :method => :put) do %>
-  <%= text_field_tag :code %>
-  <%= submit_tag "Submit" %>
-<% end %>
-
-<%= link_to "Sign out", destroy_user_session_path, :method => :delete %>
+<div class="row-fluid">
+	<div class="span12">
+		<h2>Enter your one time password</h2>
+	</div>
+</div>
+<div class=row-fluid">
+	<div class="span12">
+		<%= flash[:notice] %>
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="span12">
+		<%= form_tag([resource_name, :two_factor_authentication], :method => :put) do %>
+			<div class="span3">
+				<%= text_field_tag :code, '', autofocus: true %>
+			</div>
+			<div class="span1">
+				<%= submit_tag "Submit" %>
+			</div>
+		<% end %>
+	</div>
+</div>

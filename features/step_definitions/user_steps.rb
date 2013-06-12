@@ -197,7 +197,7 @@ Then /^I should be signed in$/ do
 end
 
 Then /^I go to the OTP page$/ do
-	page.should have_content "Enter your personal code"
+	page.should have_content "Enter your one time password"
 end
 
 Then /^I should be signed out$/ do
