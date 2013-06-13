@@ -29,8 +29,12 @@ gem "hub", ">= 1.10.2", :require => nil, :group => [:development]
 
 gem "rotp"
 gem "qrencoder"
-#gem "two_factor_authentication", :git => 'git://github.com/dougsko/two_factor_authentication.git'
 gem "two_factor_authentication"
 
 gem "less-rails"
 gem "twitter-bootstrap-rails"
+gem 'simplecov', :require => false, :group => :test
+gem 'guard-cucumber', :group => :test
+gem 'guard-bundler', :group => :test
+gem 'guard-rspec', :group => :test
+gem 'guard-spork', :group => :test

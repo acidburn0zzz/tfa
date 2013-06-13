@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+# note: http://robots.thoughtbot.com/post/33771089985/rspec-integration-tests-with-capybara
+
 describe UsersController do
 
 	before (:each) do
@@ -20,5 +22,4 @@ describe UsersController do
 		end
 
 	end
-
 end

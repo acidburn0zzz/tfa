@@ -187,6 +187,9 @@ When /^I enter an invalid OTP$/ do
 	click_button "Submit"
 end
 
+When /^I try to view all users$/ do
+	visit '/users/'
+end
 
 
 ### THEN ###
@@ -269,4 +272,8 @@ end
 
 Then /^I should see a QR code$/ do
 	page.should have_content "OTP Secret Reset"
+end
+
+Then /^I should see an authorization error$/ do
+	page.should have_content "Not authorized as an administrator."
 end

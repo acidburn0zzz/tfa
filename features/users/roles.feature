@@ -11,3 +11,10 @@ Feature: Assign roles
 		When I enter a valid OTP
 		Then I should be signed in
 		And I should have the user role
+
+	Scenario: Regular user tries to view all users
+		Given I am logged in as a user
+		When I try to view all users
+		Then I should see an authorization error
+
+
