@@ -1,91 +1,4 @@
-#
-
-def help
-	:available
-end
-
-### UTILITY METHODS ###
-
-def create_visitor
-	@visitor ||= { :name => "Testy McUserton", :email => "example@example.com",
-		:password => "changeme", :password_confirmation => "changeme",
-		:otp_secret => "lqdjuj4z6cvudk3v"
-	}
-end
-
-def find_user
-	@user ||= User.first conditions: {:email => @visitor[:email]}
-end
-
-def create_unconfirmed_user
-	create_visitor
-	delete_user
-	sign_up
-	visit '/users/sign_out'
-end
-
-def create_user
-	create_visitor
-	delete_user
-	@user = FactoryGirl.create(:user, email: @visitor[:email], :otp_secret => @visitor[:otp_secret])
-end
-
-def create_admin
-	create_visitor
-	delete_user
-	@user = FactoryGirl.create(:user, email: @visitor[:email], :otp_secret => @visitor[:otp_secret])
-	@user.add_role :admin
-end
-
-def delete_user
-	@user ||= User.first conditions: {:email => @visitor[:email]}
-	@user.destroy unless @user.nil?
-end
-
-def sign_up
-	delete_user
-	visit '/users/sign_up'
-	fill_in "Name", :with => @visitor[:name]
-	fill_in "Email", :with => @visitor[:email]
-	fill_in "user_password", :with => @visitor[:password]
-	fill_in "user_password_confirmation", :with => @visitor[:password_confirmation]
-	click_button "Sign up"
-	find_user
-end
-
-def sign_in
-	visit '/users/sign_in'
-	fill_in "Email", :with => @visitor[:email]
-	fill_in "Password", :with => @visitor[:password]
-	click_button "Sign in"
-end
-
-def sign_out
-	visit '/users/sign_out'
-end
-
-def two_factor
-	totp = ROTP::TOTP.new(@visitor[:otp_secret])
-	fill_in "code", :with => totp.now
-	click_button "Submit"
-end
-
-def log_in_user
-	create_user
-	create_visitor
-	sign_out
-	sign_in
-	two_factor
-
-end
-
-def log_in_admin
-	create_admin
-	sign_out
-	sign_in
-	two_factor
-
-end
+require 'spec_helper'
 
 describe "controller methods" do
 	before(:each) do
@@ -93,28 +6,16 @@ describe "controller methods" do
 	end
 
 	it "destroys a user" do
-		log_in_admin
-		@visitor = create_visitor
-		@visitor[:email] = 'foo@bar.com'
-		User.create(@visitor)
-		@user2 = User.where(email: @visitor[:email])[0]
-		visit 'users'
+		user = FactoryGirl.create(:user, email: 'foo@bar.com')
+		User.find(user.id)
+		create_admin
+		login_admin
+		visit '/users'
 		click_link "Delete user"
-		test = User.where(email: @visitor[:email])
-		test.size.should == 0
+		page.should have_content "User deleted"
 	end
 
-	it "updates user" do
-		log_in_admin
-		visit edit_user_registration_path
-		fill_in('Email', :with => 'foooo@oooo.com')
-		fill_in("Current password", :with => 'changeme')
-		click_button 'Update'
-		#page.should have_content "User updated"
-		user = User.find(1)
-		user.update
 
-	end
 end
 
 describe "sign up features" do
@@ -166,5 +67,51 @@ end
 describe "sign in features" do
 	before(:each) do
 		sign_out
+	end
+
+	it "User signs in with valid OTP" do
+		login_user
+		page.should have_content "Welcome, user"
+	end
+
+	it "User signs in with invalid OTP" do
+		create_visitor
+		sign_up
+		sign_out
+		sign_in
+		fill_in "code", :with => "this is wrong"
+		click_button "Submit"
+		page.should have_content "Attempt failed"
+	end
+
+	it "User is locked out after 3 bad OTP attempts" do
+		create_visitor
+		sign_up
+		sign_out
+		sign_in
+		3.times do
+			fill_in "code", :with => "this is wrong"
+			click_button "Submit"
+		end
+		page.should have_content "Access completly denied"
+		sign_out
+		sign_in
+		page.should have_content "Access completly denied"
+
+	end
+end
+
+describe "User edit features" do
+	it "Updates the role of a user" do
+		user = FactoryGirl.create(:user, email: 'foo@bar.com')
+		User.find(user.id)
+		create_admin
+		login_admin
+		visit '/users'
+		#click_link("Change role")
+		all(:xpath, '//a[text()="Change role"]').first.click
+		puts page.body
+		#page.should have_content "User deleted"
+
 	end
 end
