@@ -78,3 +78,5 @@ pickle-email-*.html
 
 # code coverage
 coverage
+
+qrcode-*.png
