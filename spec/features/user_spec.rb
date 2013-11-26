@@ -71,7 +71,7 @@ describe "sign in features" do
 
 	it "User signs in with valid OTP" do
 		login_user
-		page.should have_content "Welcome, user"
+		page.should have_content "Welcome, #{@user.name}"
 	end
 
 	it "User signs in with invalid OTP" do
@@ -103,15 +103,70 @@ end
 
 describe "User edit features" do
 	it "Updates the role of a user" do
-		user = FactoryGirl.create(:user, email: 'foo@bar.com')
-		User.find(user.id)
-		create_admin
 		login_admin
 		visit '/users'
 		#click_link("Change role")
 		all(:xpath, '//a[text()="Change role"]').first.click
-		puts page.body
-		#page.should have_content "User deleted"
+		#puts page.body
+		#click_button "Change Role"
+		#page.should have_content "User updated"
+	end
+end
 
+describe "Other methods" do
+	it "Deletes QR code" do
+		login_user
+		visit "/users/#{@user.id}/delete_qr_code"
+		File.exists?("/images/qrcode-#{@user.id}.png").should == false
+	end
+
+	it "Failes updating a user without a password" do
+		login_user
+		visit "/users/edit"
+		click_button "Update"
+		page.should have_content "be blank"
+	end
+
+	it "Updates user" do
+		login_user
+		visit "/users/edit"
+		fill_in "user[name]", :with => 'douglas'
+		fill_in "user[current_password]", :with => @user.password
+		click_button "Update"
+		page.should have_content "updated your account successfully."
+	end
+
+	it "Updates user wih bad pasword" do
+		login_user
+		visit "/users/edit"
+		fill_in "user[name]", :with => 'foo'
+		fill_in "user[current_password]", :with => 'foo'
+		click_button "Update"
+		page.should have_content "is invalid"
+	end
+
+	it "User fails at deleting" do
+		login_user
+		page.driver.submit :delete, "/users/#{@user.id}", {}
+		page.should have_content "not authorized"
+	end
+
+	it "Fails at deleting yourself" do
+		login_admin
+		page.driver.submit :delete, "/users/#{@user.id}", {}
+		page.should have_content "yourself"
+	end
+
+	it "Hits update method" do
+		login_admin
+		page.driver.submit :put, "/users/#{@user.id}", {}
+		page.should have_content "updated"
+	end
+
+	it "Tries to update as a user" do
+		create_user
+		login_user
+		page.driver.submit :put, "/users/2", {}
+		page.should have_content "Not authorized as an administrator."
 	end
 end

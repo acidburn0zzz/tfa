@@ -7,7 +7,7 @@ class Ability
 			can :manage, :all
 		elsif user.has_role? :user
 			#can :read, :all
-			can [:read, :update, :reset_secret], User do |account|
+			can [:read, :update, :reset_secret, :delete_qr_code], User do |account|
 				account.email == user.email
 			end
 		end
